@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.COMPANY_NAME }}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@joint/core@4.0.1/dist/joint.css">
+    <script src="https://cdn.jsdelivr.net/npm/lodash/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/backbone/backbone-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@joint/core@4.0.1/dist/joint.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">{{ config.COMPANY_NAME }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-page="companies">Companies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="templates">Templates</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Main Content -->
+    <div id="app" class="container-fluid mt-4"></div>
+
+    <!-- Company Modal -->
+    <div class="modal fade" id="company-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Company Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="company-form">
+                        <input type="hidden" name="_id">
+                        <div class="mb-3">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="companyName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="website">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Industry</label>
+                            <input type="text" class="form-control" name="industry">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Designations (comma-separated)</label>
+                            <input type="text" class="form-control" name="designations">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Color Scheme</label>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <label>Primary</label>
+                                    <input type="color" class="form-control form-control-color" name="colorScheme.primary" value="#0d6efd">
+                                </div>
+                                <div class="col">
+                                    <label>Secondary</label>
+                                    <input type="color" class="form-control form-control-color" name="colorScheme.secondary" value="#6c757d">
+                                </div>
+                                <div class="col">
+                                    <label>Accent</label>
+                                    <input type="color" class="form-control form-control-color" name="colorScheme.accent" value="#198754">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-company-btn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entity Modal -->
+    <div class="modal fade" id="entity-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Entity</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="entity-form">
+                        <input type="hidden" name="_id">
+                        <div class="mb-3">
+                            <label class="form-label">Entity Definition</label>
+                            <select class="form-control" name="definitionId" required>
+                                <option value="">Select Definition</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Entity Type</label>
+                            <select class="form-control" name="type" required>
+                                <option value="">Select Type</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Parent Entity</label>
+                            <select class="form-control" name="parentId">
+                                <option value="">No Parent</option>
+                            </select>
+                        </div>
+                        <div id="entity-attributes">
+                            <!-- Dynamic attribute fields will be added here -->
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <input type="text" class="form-control" name="tags" placeholder="Comma-separated tags">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Additional Metadata (JSON)</label>
+                            <textarea class="form-control font-monospace" name="metadata" rows="4"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-entity-btn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Selection/Preview Modal -->
+    <div class="modal fade" id="template-selection-modal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn btn-link d-none" id="template-back-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Templates
+                    </button>
+                    <h5 class="modal-title">Select Template</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Template List View -->
+                    <div id="template-list-view">
+                        <div class="list-group" id="template-list">
+                            <!-- Templates will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Template Preview View -->
+                    <div id="template-preview-view" class="d-none">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div id="template-preview-diagram" class="cytoscape-diagram"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="template-info">
+                                    <h6>Template Details</h6>
+                                    <div id="template-preview-details"></div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-primary" id="use-template-btn">Use This Template</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entity Definition Modal -->
+    <div class="modal fade" id="definition-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="max-height:90vh;overflow-y:auto;">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title" style="margin:0;flex:0 0 auto;text-align:left;">Edit Entity Definition</h5>
+                    <div class="btn-group" role="group" style="flex:0 0 auto;">
+                        <button class="btn btn-outline-secondary" id="reset-definition-btn">Reset</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" id="save-definition-btn"><i class="fas fa-floppy-disk"></i> Save</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <!-- Tabbed form for editing -->
+                    <ul class="nav nav-tabs" id="editDefTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="types-tab" data-bs-toggle="tab" data-bs-target="#types-tab-pane" type="button" role="tab">Entity Types</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="attributes-tab" data-bs-toggle="tab" data-bs-target="#attributes-tab-pane" type="button" role="tab">Attributes</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="relationships-tab" data-bs-toggle="tab" data-bs-target="#relationships-tab-pane" type="button" role="tab">Relationships</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3">
+                        <!-- Entity Types Tab -->
+                        <div class="tab-pane fade show active" id="types-tab-pane" role="tabpanel">
+                            <div id="edit-types-list"></div>
+                            <button class="btn btn-sm btn-success mt-2" id="add-entity-type-btn"><i class="fas fa-plus"></i> Add Type</button>
+                        </div>
+                        <!-- Attributes Tab -->
+                        <div class="tab-pane fade" id="attributes-tab-pane" role="tabpanel">
+                            <div id="edit-attributes-list"></div>
+                            <button class="btn btn-sm btn-success mt-2" id="add-attribute-btn"><i class="fas fa-plus"></i> Add Attribute</button>
+                        </div>
+                        <!-- Relationships Tab -->
+                        <div class="tab-pane fade" id="relationships-tab-pane" role="tabpanel">
+                            <div id="edit-relationships-list"></div>
+                            <button class="btn btn-sm btn-success mt-2" id="add-relationship-btn"><i class="fas fa-plus"></i> Add Relationship</button>
+                        </div>
+                    </div>
+                    <!-- Live Preview and Legend -->
+                    <hr>
+                    <div class="mb-2"><strong>Live Preview</strong></div>
+                    <div id="edit-definition-preview" class="cytoscape-diagram mb-2" style="height:250px;"></div>
+                    <div id="edit-definition-legend" class="small text-muted"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Definition Customization Modal -->
+    <div class="modal fade" id="definition-customization-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Customize Definition</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="definition-customization-form">
+                        <input type="hidden" id="selected-template-id">
+                        <div class="mb-3">
+                            <label class="form-label">Definition Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Custom Entity Types (JSON)</label>
+                            <textarea class="form-control font-monospace" name="entityTypes" rows="6"></textarea>
+                            <small class="text-muted">Override or add entity type definitions</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Custom Attributes (JSON)</label>
+                            <textarea class="form-control font-monospace" name="allowedAttributes" rows="6"></textarea>
+                            <small class="text-muted">Override or add allowed attributes per type</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Custom Validations (JSON)</label>
+                            <textarea class="form-control font-monospace" name="validations" rows="6"></textarea>
+                            <small class="text-muted">Override or add validation rules</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Custom Relationships (JSON)</label>
+                            <textarea class="form-control font-monospace" name="relationships" rows="6"></textarea>
+                            <small class="text-muted">Additional relationship rules to append</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-definition-customization-btn">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Definition Structure View Modal -->
+    <div class="modal fade" id="definition-structure-modal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Definition Structure</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#visual-tab">Visual</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#json-tab">JSON</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#metadata-tab">Metadata Schema</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3">
+                        <div class="tab-pane fade show active" id="visual-tab">
+                            <div id="definition-diagram" class="cytoscape-diagram"></div>
+                        </div>
+                        <div class="tab-pane fade" id="json-tab">
+                            <div id="definition-structure-content"></div>
+                        </div>
+                        <div class="tab-pane fade" id="metadata-tab">
+                            <div id="metadata-schema-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Cytoscape.js and its dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-klay@3.1.4/cytoscape-klay.min.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="/js/config.js"></script>
+    <script src="/js/entity-definitions.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html> 

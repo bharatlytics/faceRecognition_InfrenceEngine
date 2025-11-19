@@ -1,0 +1,289 @@
+/* Entity Tree Styles */
+.entity-tree {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+/* Definition Card Styles */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card .definition-preview {
+    min-height: 200px;
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin: -1rem;
+}
+
+.card .btn-group {
+    opacity: 0.7;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.card:hover .btn-group {
+    opacity: 1;
+}
+
+/* Cytoscape Diagram Styles */
+.definition-preview,
+#definition-diagram,
+#template-preview-modal .template-diagram {
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.definition-preview canvas,
+#definition-diagram canvas,
+#template-preview-modal .template-diagram canvas {
+    outline: none;
+}
+
+/* Network Node Styles */
+.vis-network .vis-navigation {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 1;
+}
+
+.vis-network:focus {
+    outline: none;
+}
+
+/* Tooltip Styles */
+.cy-tooltip {
+    position: absolute;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    pointer-events: none;
+    max-width: 200px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Template Preview Modal */
+#template-preview-modal .template-diagram {
+    height: 400px;
+    border: 1px solid #dee2e6;
+    margin-bottom: 1rem;
+}
+
+#template-preview-modal .template-info {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+/* Metadata Schema Styles */
+.metadata-schema .card {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    margin-bottom: 1rem;
+}
+
+.metadata-schema .card-header {
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+}
+
+.metadata-schema .table {
+    margin-bottom: 0;
+}
+
+.metadata-schema .table th {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+/* Template Preview Styles */
+.template-info {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+.template-info dl {
+    margin-bottom: 0;
+}
+
+.template-info dt {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+/* Modal Styles */
+.modal-xl .modal-body {
+    padding: 1.5rem;
+}
+
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    padding: 0.75rem 1rem;
+    margin-right: 0.5rem;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link:hover {
+    border: none;
+    color: #0d6efd;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    border: none;
+    border-bottom: 2px solid #0d6efd;
+    margin-bottom: -2px;
+}
+
+/* Entity Tree Item Styles */
+.entity-tree-item {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.entity-tree-item:hover {
+    border-color: #6c757d;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.entity-tree-item.active {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.entity-tree-item .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.entity-tree-item .btn {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.entity-tree-item:hover .btn {
+    opacity: 1;
+}
+
+.entity-children {
+    position: relative;
+}
+
+.entity-children::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -1rem;
+    bottom: 1rem;
+    width: 2px;
+    background-color: #dee2e6;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-control.font-monospace {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875rem;
+}
+
+/* Modal Styles */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Definition Structure View */
+#definition-structure-content {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875rem;
+}
+
+#definition-structure-content h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #6c757d;
+}
+
+#definition-structure-content pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+}
+
+#definition-structure-content code {
+    color: #212529;
+}
+
+/* Toast Styles */
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1060;
+}
+
+.toast {
+    min-width: 250px;
+    background-color: #fff;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.toast-header {
+    padding: 0.5rem 0.75rem;
+}
+
+.toast-body {
+    padding: 0.75rem;
+}
+
+/* Spinner Styles */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1070;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+} 

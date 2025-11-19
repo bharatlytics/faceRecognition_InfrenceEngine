@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharatlytics - Companies</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        .btn-add-company {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+        .dataTables_wrapper .dataTables_length select {
+            width: 60px;
+            display: inline-block;
+        }
+        .dataTables_wrapper .dataTables_filter input {
+            width: 200px;
+            margin-left: 0.5rem;
+        }
+        .action-buttons .btn {
+            padding: 0.25rem 0.5rem;
+            margin: 0 0.25rem;
+        }
+        .company-name {
+            font-weight: 500;
+        }
+        .company-industry {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        .company-contact {
+            font-size: 0.875rem;
+        }
+        .company-contact .text-muted {
+            font-size: 0.75rem;
+        }
+        .dataTables_wrapper .dataTables_info {
+            padding-top: 1rem;
+        }
+        .dataTables_wrapper .dataTables_paginate {
+            padding-top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .dataTables_wrapper .dataTables_filter input {
+                width: 100%;
+                margin-left: 0;
+            }
+            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_filter {
+                text-align: left;
+                margin-bottom: 0.5rem;
+            }
+            .action-buttons {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Companies</h2>
+            <button class="btn btn-primary btn-add-company" data-bs-toggle="modal" data-bs-target="#addCompanyModal">
+                <i class="fas fa-building me-2"></i>Add Company
+            </button>
+        </div>
+
+        <!-- Companies Table -->
+        <div class="table-responsive">
+            <table id="companiesTable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Industry</th>
+                        <th>Contact</th>
+                        <th>Website</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Company Modal -->
+    <div class="modal fade" id="addCompanyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Company</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCompanyForm">
+                        <div class="mb-3">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" name="companyName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Industry</label>
+                            <input type="text" class="form-control" name="industry">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="website">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveCompanyBtn">Save Company</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            const companiesTable = $('#companiesTable').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: false,
+                pageLength: 10,
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                     '<"row"<"col-sm-12"tr>>' +
+                     '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                order: [[0, 'asc']],
+                columns: [
+                    {
+                        data: 'companyName',
+                        render: function(data, type, row) {
+                            return `
+                                <div class="company-name">${data}</div>
+                                <div class="company-industry">${row.industry || 'No Industry'}</div>
+                            `;
+                        }
+                    },
+                    {
+                        data: 'industry',
+                        render: function(data) {
+                            return data || '-';
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="company-contact">
+                                    <div>${data.email || '-'}</div>
+                                    <div class="text-muted">${data.phone || '-'}</div>
+                                </div>
+                            `;
+                        }
+                    },
+                    {
+                        data: 'website',
+                        render: function(data) {
+                            return data ? 
+                                `<a href="${data}" target="_blank">${data}</a>` : 
+                                '-';
+                        }
+                    },
+                    {
+                        data: '_id',
+                        orderable: false,
+                        render: function(data) {
+                            return `
+                                <div class="action-buttons">
+                                    <button class="btn btn-info btn-sm view-company" data-id="${data}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-warning btn-sm edit-company" data-id="${data}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-company" data-id="${data}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search companies...",
+                    lengthMenu: "Show _MENU_ companies per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ companies",
+                    infoEmpty: "No companies found",
+                    infoFiltered: "(filtered from _MAX_ total companies)",
+                    paginate: {
+                        first: '<i class="fas fa-angle-double-left"></i>',
+                        previous: '<i class="fas fa-angle-left"></i>',
+                        next: '<i class="fas fa-angle-right"></i>',
+                        last: '<i class="fas fa-angle-double-right"></i>'
+                    }
+                }
+            });
+
+            // Load companies
+            function loadCompanies() {
+                $.ajax({
+                    url: '/api/companies',
+                    method: 'GET',
+                    success: function(companies) {
+                        companiesTable.clear();
+                        companiesTable.rows.add(companies);
+                        companiesTable.draw();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading companies:', error);
+                        alert('Error loading companies. Please try again.');
+                    }
+                });
+            }
+
+            // Save new company
+            $('#saveCompanyBtn').click(function() {
+                const formData = $('#addCompanyForm').serialize();
+                
+                $.ajax({
+                    url: '/api/companies',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $('#addCompanyModal').modal('hide');
+                        loadCompanies();
+                        $('#addCompanyForm')[0].reset();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error saving company:', error);
+                        alert('Error saving company. Please try again.');
+                    }
+                });
+            });
+
+            // View company details
+            $(document).on('click', '.view-company', function() {
+                const companyId = $(this).data('id');
+                window.location.href = `/companies/${companyId}`;
+            });
+
+            // Edit company
+            $(document).on('click', '.edit-company', function() {
+                const companyId = $(this).data('id');
+                window.location.href = `/companies/${companyId}/edit`;
+            });
+
+            // Delete company
+            $(document).on('click', '.delete-company', function() {
+                const companyId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this company?')) {
+                    $.ajax({
+                        url: `/api/companies/${companyId}`,
+                        method: 'DELETE',
+                        success: function() {
+                            loadCompanies();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error deleting company:', error);
+                            alert('Error deleting company. Please try again.');
+                        }
+                    });
+                }
+            });
+
+            // Initial load
+            loadCompanies();
+        });
+    </script>
+</body>
+</html> 
